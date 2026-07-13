@@ -14,13 +14,13 @@ Le relazioni sono state analizzate sia sui dati grezzi giornalieri, sia mediante
 
 Il coefficiente di correlazione di Pearson misura l'intensità e la direzione della relazione lineare tra due variabili quantitative. Date due variabili $X$ e $Y$, osservate su $n$ coppie di valori $(x_i, y_i)$, il coefficiente di Pearson è definito come:
 
-$$
+```math
 r_{XY} =
 \frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}
 {\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}}
 =
 \frac{\mathrm{cov}(X,Y)}{\sigma_X\sigma_Y}
-$$
+```
 
 dove:
 
