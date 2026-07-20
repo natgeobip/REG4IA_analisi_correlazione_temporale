@@ -268,6 +268,40 @@ L'uso di lag e medie mobili ha evidenziato che le relazioni più robuste emergon
 
 Nel complesso, le evidenze ottenute supportano la successiva selezione delle feature per modelli di regressione e machine learning. S5P NO₂ risulta una feature chiave per NO₂, O₃ e particolato; l'Aerosol Index contribuisce alla descrizione del carico aerosolico e dei gradienti emissivi come proxy comune per PM10 e PM2.5; HCHO fornisce informazione utile per i processi fotochimici; le coordinate geografiche rappresentano proxy statici importanti dei gradienti territoriali. La fase modellistica dovrà però integrare tali risultati con controlli di multicollinearità, validazione spaziale e temporale, ed eventuale inclusione di variabili meteorologiche aggiuntive capaci di rappresentare stabilità atmosferica, temperatura, umidità, precipitazione e altezza dello strato limite.
 
+## Valori operativi per la modellistica
+
+A conclusione dell'analisi esplorativa, i risultati delle matrici lag-media mobile permettono di definire un primo insieme di configurazioni operative da utilizzare nella successiva modellistica degli inquinanti in funzione dei proxy più significativi. La scelta privilegia la scala giornaliera, poiché consente di mantenere una risoluzione temporale coerente con l'evoluzione degli episodi di inquinamento, applicando tuttavia una media mobile di 14 giorni per ridurre il rumore giornaliero e rendere più stabile il segnale satellitare. Il lag riportato in tabella deve essere interpretato secondo la stessa convenzione temporale utilizzata nelle matrici di correlazione: lag nullo indica una relazione sincrona, mentre valori positivi indicano uno spostamento temporale tra la serie dell'inquinante e quella del proxy.
+
+| Inquinante da modellare | Proxy principale selezionato | Durata della media | Lag operativo | Coefficiente medio ottimale | Indicazione per il modello |
+| --- | --- | --- | --- | --- | --- |
+| NO₂ | NO₂ TROPOMI | 14 giorni | 0 giorni | $r = 0,819$ | Configurazione principale: NO₂ modellato in funzione del proxy satellitare diretto NO₂ TROPOMI. |
+| O₃ | Proxy NO₂ S5P | 14 giorni | 7 giorni | $r = -0,820$ | Configurazione principale negativa: O₃ modellato in funzione del proxy NO₂, considerando la relazione anti-correlata e la migliore risposta con ritardo di 7 giorni. |
+| PM10 | Proxy NO₂ S5P | 14 giorni | 1 giorno | $r = 0,509$ | Configurazione principale: PM10 modellato in funzione del proxy NO₂, più informativo dell'Aerosol Index nella correlazione ottimale. |
+| PM2.5 | Proxy NO₂ S5P | 14 giorni | 1 giorno | $r = 0,542$ | Configurazione principale: PM2.5 modellato in funzione del proxy NO₂, con comportamento analogo al PM10 ma coefficiente leggermente superiore. |
+
+Questi valori rappresentano le combinazioni più adatte per la modellistica giornaliera di base. Per NO₂, il proxy diretto TROPOMI è il predittore più robusto e non richiede lag, indicando una coerenza temporale immediata tra colonna satellitare e concentrazione modellata. Per O₃, invece, il proxy più informativo non è la colonna satellitare di ozono, ma il proxy NO₂ con correlazione negativa e lag di 7 giorni; questa scelta riflette la natura fotochimica dell'ozono e la sua relazione non lineare con i precursori azotati. Per PM10 e PM2.5, il proxy NO₂ risulta più performante dell'Aerosol Index come predittore principale, suggerendo che il gradiente emissivo e territoriale associato agli ossidi di azoto descrive efficacemente anche una parte della variabilità del particolato.
+
+Accanto ai proxy principali, alcune variabili possono essere mantenute come candidate secondarie o come covariate ausiliarie nei modelli multivariati, purché vengano controllati gli effetti di ridondanza e multicollinearità:
+
+| Inquinante | Proxy secondario rilevante | Durata della media | Lag | Coefficiente ottimale | Ruolo interpretativo |
+| --- | --- | --- | --- | --- | --- |
+| NO₂ | Aerosol Index S5P comune | 14 giorni | 0 giorni | $r = 0,606$ | Indicatore indiretto di aerosol e contesti emissivi condivisi. |
+| NO₂ | HCHO proxy | 14 giorni | 7 giorni | $r = -0,515$ | Indicatore di condizioni fotochimiche e differenze stagionali rispetto alle aree dominate da emissioni primarie. |
+| O₃ | HCHO proxy | 14 giorni | 7 giorni | $r = 0,499$ | Proxy dell'attività fotochimica e dell'ossidazione dei composti organici volatili. |
+| PM10 | Aerosol Index S5P comune | 14 giorni | 0 giorni | $r = 0,468$ | Proxy aerosolico indiretto, non specifico della frazione PM10. |
+| PM2.5 | Aerosol Index S5P comune | 14 giorni | 0 giorni | $r = 0,467$ | Stesso proxy aerosolico usato per PM10, non una misura separata del PM2.5. |
+
+Alla scala settimanale, le stesse relazioni diventano più robuste grazie all'ulteriore attenuazione della variabilità giornaliera. Tali configurazioni possono essere utilizzate per modelli aggregati settimanali, analisi di sensitività o confronti di robustezza:
+
+| Inquinante da modellare | Proxy principale settimanale | Durata della media | Lag operativo | Coefficiente medio ottimale |
+| --- | --- | --- | --- | --- |
+| NO₂ | NO₂ TROPOMI | 4 settimane | 0 settimane | $r = 0,878$ |
+| O₃ | Proxy NO₂ S5P | 4 settimane | 2 settimane | $r = -0,877$ |
+| PM10 | Proxy NO₂ S5P | 4 settimane | 0 settimane | $r = 0,544$ |
+| PM2.5 | Proxy NO₂ S5P | 4 settimane | 0 settimane | $r = 0,596$ |
+
+In sintesi, la modellistica successiva dovrebbe assumere come base operativa le combinazioni giornaliere con media mobile a 14 giorni e i lag specifici riportati sopra, mantenendo le configurazioni settimanali come verifica della stabilità del segnale. L'Aerosol Index deve essere trattato come un unico proxy S5P comune del carico aerosolico per PM10 e PM2.5; pertanto, eventuali differenze nella risposta dei due modelli non dovranno essere attribuite a misure satellitari distinte, ma alla diversa natura delle serie CAMS e alla differente sensibilità delle due frazioni granulometriche ai processi di accumulo, trasporto e rimozione atmosferica.
+
 ## Appendice: spazi per le figure
 
 ### Figure generali e riepiloghi
