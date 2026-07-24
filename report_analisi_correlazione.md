@@ -1,6 +1,9 @@
-# Analisi di correlazione tra inquinanti atmosferici e variabili satellitari, meteorologiche e statiche
+#### 6.1 Approccio Basato sui Dati CAMS
+##### 6.1.1 Analisi delle correlazioni
 
-## Obiettivo dell'analisi
+Questa sottosezione presenta l'analisi delle correlazioni tra inquinanti atmosferici e variabili satellitari, meteorologiche e statiche, e introduce le evidenze quantitative utilizzate come base per la successiva regressione lineare multipla.
+
+###### Obiettivo dell'analisi
 
 L'analisi di correlazione è stata condotta con l'obiettivo di valutare le relazioni statistiche tra le concentrazioni degli inquinanti atmosferici NO₂, O₃, PM10 e PM2.5 e l'insieme delle variabili esplicative disponibili nel dataset. Tali variabili comprendono indicatori satellitari Sentinel-5P/TROPOMI, variabili meteorologiche legate alla ventilazione, e variabili statiche di posizione, rappresentate dalle coordinate geografiche dei punti di osservazione.
 
@@ -8,28 +11,11 @@ La correlazione è utilizzata in questa fase come strumento esplorativo. Essa co
 
 Le relazioni sono state analizzate sia sui dati grezzi giornalieri, sia mediante matrici temporali costruite variando il ritardo temporale tra le serie e la finestra di media mobile. Questo approccio permette di distinguere le relazioni istantanee da quelle che emergono su scale temporali più lunghe, dove il rumore meteorologico giornaliero tende a ridursi e il segnale sinottico o stagionale risulta più evidente.
 
-## Metodologia
+###### Metodologia
 
-### Coefficiente di correlazione di Pearson
+###### Coefficiente di correlazione di Pearson
 
 Il coefficiente di correlazione di Pearson misura l'intensità e la direzione della relazione lineare tra due variabili quantitative. Date due variabili $X$ e $Y$, osservate su $n$ coppie di valori $(x_i, y_i)$, il coefficiente di Pearson è definito come:
-
-```math
-r_{XY} =
-\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}
-{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}}
-=
-\frac{\mathrm{cov}(X,Y)}{\sigma_X\sigma_Y}
-```
-
-dove:
-
-- $r_{XY}$ è il coefficiente di correlazione lineare tra $X$ e $Y$;
-- $x_i$ e $y_i$ sono i valori osservati della coppia di variabili per l'osservazione $i$;
-- $\bar{x}$ e $\bar{y}$ sono le medie campionarie delle due variabili;
-- $n$ è il numero di osservazioni valide considerate;
-- $\mathrm{cov}(X,Y)$ è la covarianza tra le due variabili;
-- $\sigma_X$ e $\sigma_Y$ sono le deviazioni standard di $X$ e $Y$.
 
 Il coefficiente assume valori compresi tra $-1$ e $+1$. Valori positivi indicano che le due variabili tendono ad aumentare congiuntamente; valori negativi indicano che all'aumentare di una variabile l'altra tende a diminuire; valori prossimi a zero indicano assenza di una relazione lineare apprezzabile.
 
@@ -45,7 +31,7 @@ Nel presente report si utilizza la seguente classificazione qualitativa dell'int
 
 Tale classificazione deve essere interpretata come guida descrittiva. In ambito atmosferico, anche correlazioni moderate possono essere rilevanti, poiché le concentrazioni degli inquinanti sono influenzate simultaneamente da emissioni, chimica atmosferica, trasporto, deposizione, condizioni meteorologiche e struttura spaziale del territorio.
 
-### Costruzione delle matrici di correlazione
+###### Costruzione delle matrici di correlazione
 
 Per ogni inquinante è stata calcolata la correlazione con tutte le variabili disponibili e con i proxy satellitari ritenuti fisicamente pertinenti. Le variabili satellitari considerate includono la colonna troposferica di NO₂, la colonna di O₃, l'Aerosol Index, SO₂ e HCHO. L'Aerosol Index è utilizzato come unico proxy S5P comune del carico aerosolico per l'interpretazione di PM10 e PM2.5, non come misura separata delle due frazioni del particolato. Le variabili meteorologiche comprendono la velocità del vento giornaliera e metriche aggiuntive di ventilazione calcolate nelle ore precedenti il passaggio satellitare. Le coordinate geografiche, longitudine e latitudine, sono interpretate come variabili statiche, utili a rappresentare gradienti spaziali legati a urbanizzazione, quota, aree alpine, pianura e distribuzione delle sorgenti emissive.
 
@@ -55,13 +41,13 @@ La prima matrice di correlazione è stata costruita sui dati grezzi giornalieri,
 
 La scala giornaliera considera lag da 0 a 7 giorni e finestre di media mobile fino a 14 giorni. La scala settimanale considera lag fino a 4 settimane e finestre di media mobile fino a 4 settimane. In entrambi i casi, la cella con il valore massimo in modulo identifica la combinazione temporale più informativa per la specifica coppia inquinante-proxy. Le matrici sono rappresentate tramite heatmap, così da rendere immediatamente riconoscibili le aree di correlazione positiva, negativa o nulla.
 
-![Figura 1 - Matrice generale di correlazione sui dati giornalieri](risultati_correlazione/matrice_correlazione_variabili_giornaliero.png)
+<img src="image/risultati_correlazione/matrice_correlazione_variabili_giornaliero.png" alt="Figura 1 - Matrice generale di correlazione sui dati giornalieri" width="450">
 
 *Figura 1.  matrice generale di correlazione tra inquinanti, indicatori satellitari e vento.*
 
-## Interpretazione dei risultati
+###### Interpretazione dei risultati
 
-### Quadro generale delle correlazioni
+###### Quadro generale delle correlazioni
 
 La matrice generale evidenzia una struttura fisicamente coerente. NO₂, PM10 e PM2.5 risultano tra loro fortemente associati, mentre O₃ mostra una relazione negativa con NO₂ e con il particolato. Questo comportamento è coerente con il ruolo del NO₂ come tracciante di emissioni antropiche primarie e con i processi fotochimici che regolano il bilancio dell'ozono troposferico.
 
@@ -76,7 +62,7 @@ I coefficienti più rilevanti sui dati giornalieri grezzi sono i seguenti:
 
 La correlazione molto forte tra PM10 e PM2.5 $(r = 0,977)$ indica che le due frazioni del particolato condividono gran parte della variabilità spaziale e temporale. Questo risultato è atteso, poiché entrambe sono influenzate da sorgenti comuni, condizioni di stabilità atmosferica, aerosol secondario e processi di accumulo. Tuttavia, proprio questa elevata correlazione suggerisce cautela nella successiva modellazione: l'inclusione simultanea di variabili fortemente ridondanti può generare multicollinearità.
 
-### NO₂
+###### NO₂
 
 Il NO₂ presenta una correlazione molto forte con PM2.5 $(r = 0,825)$ e PM10 $(r = 0,810)$, coerente con la presenza di sorgenti emissive comuni, in particolare traffico veicolare, combustione civile e attività antropiche concentrate nelle aree urbanizzate. La correlazione positiva con S5P NO₂ $(r = 0,566)$ conferma che la colonna troposferica osservata da satellite è informativa rispetto alla variabilità al suolo rappresentata dal campo CAMS, pur non descrivendola in modo perfetto. La differenza tra colonna satellitare e concentrazione superficiale è attesa, poiché il satellite integra il contenuto verticale dell'atmosfera e risente di nuvolosità, geometria di osservazione, profilo verticale e condizioni di rimescolamento.
 
@@ -88,11 +74,11 @@ L'analisi temporale rafforza il ruolo del proxy satellitare diretto. Alla scala 
 
 Tra i proxy alternativi, l'Aerosol Index comune mostra una correlazione giornaliera forte $(r = 0,606)$ e settimanale forte $(r = 0,650)$, mentre HCHO mostra una correlazione negativa moderata-forte $(r = -0,515$ giornaliero; $r = -0,628$ settimanale). La relazione tra NO₂ e AI va letta come associazione tra carico aerosolico complessivo e contesti emissivi, non come misura diretta del particolato fine o grossolano. La anti-correlazione con HCHO può riflettere differenze stagionali e spaziali tra aree dominate da emissioni primarie di NO₂ e condizioni fotochimiche più favorevoli alla produzione di composti organici ossidati.
 
-![Figura 2 - Matrice giornaliera NO2 vs NO2 TROPOMI](risultati_correlazione/matrice_giornaliero_NO2_NO2_TROPOMI.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_NO2_NO2_TROPOMI.png" alt="Figura 2 - Matrice giornaliera NO2 vs NO2 TROPOMI" width="550">
 
 *Figura 2.  heatmap lag-media mobile per NO₂ e NO₂ TROPOMI.*
 
-### O₃
+###### O₃
 
 L'ozono mostra il comportamento più nettamente anti-correlato rispetto agli inquinanti primari. La correlazione con NO₂ è forte e negativa $(r = -0,720)$, e la correlazione con S5P NO₂ è moderata-negativa $(r = -0,563)$. Anche PM2.5 $(r = -0,541)$ e PM10 $(r = -0,466)$ risultano negativamente associati a O₃. Questo quadro è coerente con la letteratura atmosferica: l'O₃ troposferico è un inquinante secondario, la cui concentrazione dipende da radiazione solare, temperatura, disponibilità di NOₓ e composti organici volatili, nonché dai regimi chimici locali. In contesti urbani ad alta emissione di NO, l'ozono può essere consumato per titolazione, generando anti-correlazione con NO₂.
 
@@ -102,11 +88,11 @@ La relazione più forte dell'analisi temporale è tuttavia quella negativa tra O
 
 Il fatto che la colonna S5P O₃ non risulti fortemente correlata con l'O₃ superficiale $(r = 0,059$ nella matrice grezza; $r = 0,155$ nel migliore caso giornaliero) è coerente con la natura verticale della misura satellitare. La colonna totale di ozono è dominata in larga misura dal contributo stratosferico e non rappresenta direttamente la concentrazione troposferica al suolo.
 
-![Figura 3 - Matrice giornaliera O3 vs proxy NO2](risultati_correlazione/matrice_giornaliero_O3_NO2_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_O3_NO2_proxy.png" alt="Figura 3 - Matrice giornaliera O3 vs proxy NO2" width="550">
 
 *Figura 3.  heatmap lag-media mobile per O₃ e proxy NO₂.*
 
-### PM10
+###### PM10
 
 PM10 mostra una correlazione molto forte con PM2.5 $(r = 0,977)$ e con NO₂ $(r = 0,810)$. La prima relazione riflette la sovrapposizione tra frazioni granulometriche e la presenza di processi comuni di accumulo e aerosol secondario. La seconda indica che il particolato è associato a contesti emissivi simili a quelli degli ossidi di azoto, sebbene il PM10 includa anche contributi da risospensione, polveri naturali, trasporto regionale e particelle grossolane.
 
@@ -116,11 +102,11 @@ L'Aerosol Index raggiunge $r = 0,468$ alla scala giornaliera e $r = 0,498$ alla 
 
 La correlazione negativa con O₃ $(r = -0,466)$ può essere letta come effetto della contrapposizione tra condizioni meteorologiche favorevoli all'accumulo di particolato, spesso associate a stabilità e ridotto rimescolamento, e condizioni fotochimiche più favorevoli alla formazione di ozono. Anche la correlazione negativa con la latitudine $(r = -0,430)$ suggerisce una maggiore incidenza del PM10 nelle aree più pianeggianti e antropizzate.
 
-![Figura 4 - Matrice giornaliera PM10 vs proxy NO2](risultati_correlazione/matrice_giornaliero_PM10_NO2_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_PM10_NO2_proxy.png" alt="Figura 4 - Matrice giornaliera PM10 vs proxy NO2" width="550">
 
 *Figura 4.  heatmap lag-media mobile per PM10 e proxy NO₂.*
 
-### PM2.5
+###### PM2.5
 
 PM2.5 presenta una struttura di correlazione molto simile a PM10. La correlazione con PM10 è quasi perfetta $(r = 0,977)$, mentre quella con NO₂ è molto forte $(r = 0,825)$. Ciò evidenzia la condivisione di sorgenti e condizioni atmosferiche favorevoli all'accumulo, ma suggerisce anche attenzione alla ridondanza informativa tra predittori nella modellazione successiva.
 
@@ -128,11 +114,11 @@ La correlazione grezza con S5P NO₂ è moderata $(r = 0,511)$, leggermente supe
 
 L'Aerosol Index presenta correlazioni moderate $(r = 0,467$ giornaliero; $r = 0,507$ settimanale), compatibili con il suo ruolo di proxy satellitare dell'aerosol atmosferico. Anche in questo caso, il valore AI è lo stesso identico utilizzato per PM10: Sentinel-5P non distingue direttamente tra particolato grossolano e particolato fine. La differenza tra i coefficienti PM10-AI e PM2.5-AI dipende quindi dalla diversa variabile CAMS confrontata con lo stesso indicatore satellitare, non da un diverso prodotto S5P. La relazione con HCHO è negativa e moderata alla scala settimanale $(r = -0,440)$, mentre SO₂ rimane debole. La correlazione negativa con O₃ $(r = -0,541)$ è più marcata rispetto al PM10 e può riflettere la maggiore sensibilità della frazione fine alle condizioni di stabilità, accumulo e formazione di aerosol secondario in periodi meno favorevoli alla produzione fotochimica di ozono.
 
-![Figura 5 - Matrice giornaliera PM2.5 vs proxy NO2](risultati_correlazione/matrice_giornaliero_PM25_NO2_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_PM25_NO2_proxy.png" alt="Figura 5 - Matrice giornaliera PM2.5 vs proxy NO2" width="550">
 
 *Figura 5.  heatmap lag-media mobile per PM2.5 e proxy NO₂.*
 
-### Effetto della scala temporale e delle medie mobili
+###### Effetto della scala temporale e delle medie mobili
 
 Il confronto tra scala giornaliera e settimanale mostra un incremento sistematico dei coefficienti ottimali. NO₂ passa da $r = 0,819$ a $r = 0,878$, O₃ da $r = -0,820$ a $r = -0,877$, PM10 da $r = 0,509$ a $r = 0,544$, e PM2.5 da $r = 0,542$ a $r = 0,596$. Tale incremento è coerente con l'idea che l'aggregazione temporale attenui rumore, disallineamenti giornalieri, nuvolosità, variabilità del vento e incertezze di osservazione satellitare.
 
@@ -145,15 +131,15 @@ Il confronto tra scala giornaliera e settimanale mostra un incremento sistematic
 
 L'uso di finestre mobili ampie, in particolare 14 giorni alla scala giornaliera, suggerisce che la relazione tra CAMS e Sentinel-5P è più robusta su scale sinottiche o sub-stagionali rispetto al singolo giorno. Questo è particolarmente plausibile per NO₂, che presenta elevata variabilità spaziale e temporale, e per il particolato, che risente di accumulo, persistenza e condizioni meteorologiche pregresse.
 
-![Figura 6 - Confronto giornaliero e settimanale](risultati_correlazione/confronto_giornaliero_settimanale.png)
+<img src="image/risultati_correlazione/confronto_giornaliero_settimanale.png" alt="Figura 6 - Confronto giornaliero e settimanale" width="550">
 
 *Figura 6. confronto tra coefficienti ottimali giornalieri e settimanali.*
 
-### Interpretazione dei diagrammi di dispersione e best fitting
+###### Interpretazione dei diagrammi di dispersione e best fitting
 
 I diagrammi di dispersione e best fitting rappresentano, per ciascun inquinante, la relazione tra la variabile CAMS e il proxy Sentinel-5P selezionato come ottimale dall'analisi lag-media mobile. A differenza delle heatmap, che sintetizzano il comportamento medio delle correlazioni al variare della finestra temporale, questi grafici mostrano direttamente la forma della relazione tra le coppie ottimali e permettono di valutare dispersione, linearità, presenza di curvature e stabilità del segnale.
 
-![Figura 7 - Dispersione e best fitting giornaliero](risultati_correlazione/dispersione_bestfit_giornaliero.png)
+<img src="image/risultati_correlazione/dispersione_bestfit_giornaliero.png" alt="Figura 7 - Dispersione e best fitting giornaliero" width="550">
 
 *Figura 7.  diagrammi di dispersione e best fitting per le coppie ottimali alla scala giornaliera.*
 
@@ -181,7 +167,7 @@ Per PM10 e PM2.5, i diagrammi mostrano relazioni positive con il proxy NO₂, co
 
 La differenza tra i coefficienti pooled dei grafici di dispersione e gli $r$ medi per punto riportati nelle matrici è metodologicamente rilevante. I coefficienti pooled sono più elevati perché combinano variabilità spaziale e temporale: includono quindi il contrasto tra aree molto inquinate e aree meno inquinate. Gli $r$ medi per punto, invece, descrivono meglio la coerenza temporale locale. Questa distinzione è essenziale per la modellazione successiva: un predittore può apparire molto forte nel dominio aggregato perché cattura il gradiente spaziale, ma essere meno efficace nel descrivere le variazioni giorno-per-giorno in un singolo punto.
 
-### Ruolo del vento e del trasporto atmosferico
+###### Ruolo del vento e del trasporto atmosferico
 
 Le correlazioni lineari dirette tra velocità del vento e indicatori satellitari sono generalmente deboli o trascurabili. Per S5P NO₂, il coefficiente passa da $r = -0,024$ usando il vento giornaliero a $r = -0,033$ usando il vento medio nelle 3 ore precedenti il passaggio satellitare. Per S5P O₃, la relazione è leggermente più evidente e positiva, da $r = 0,117$ a $r = 0,158$ usando la finestra pre-13 di 6 ore. Aerosol Index, SO₂ e HCHO mostrano valori prossimi a zero.
 
@@ -189,11 +175,11 @@ Questi risultati non implicano che il vento sia fisicamente irrilevante. La velo
 
 L'analisi per settore di provenienza del vento mostra differenze più informative. Per NO₂, la correlazione con S5P NO₂ rimane elevata in tutti i settori, da $r = 0,794$ con vento da Nord a $r = 0,831$ con vento da Sud. Per O₃, la correlazione negativa con il proxy NO₂ è più intensa nei settori Nord, Est e Sud $(r \approx -0,80)$, mentre risulta leggermente meno marcata con vento da Ovest $(r = -0,769)$. Per PM10 e PM2.5, i coefficienti aumentano nei settori Sud e Ovest, raggiungendo rispettivamente $r = 0,595$ per PM10 e $r = 0,645$ per PM2.5 con vento da Ovest. Questo comportamento può indicare un contributo del trasporto orizzontale e della localizzazione delle sorgenti sopravento.
 
-![Figura 8 - Correlazione vento e indici S5P](risultati_correlazione/vento_pre13_correlazioni_s5p.png)
+<img src="image/risultati_correlazione/vento_pre13_correlazioni_s5p.png" alt="Figura 8 - Correlazione vento e indici S5P" width="550">
 
 *Figura 8. confronto delle correlazioni tra indici S5P e finestre di vento.*
 
-### Interpretazione fisica delle variabili meteorologiche e statiche
+###### Interpretazione fisica delle variabili meteorologiche e statiche
 
 Le correlazioni osservate devono essere interpretate nel quadro dei processi fisici che regolano concentrazione, dispersione e trasformazione degli inquinanti.
 
@@ -205,13 +191,13 @@ Per PM10 e PM2.5, le relazioni positive con NO₂ e Aerosol Index indicano l'imp
 
 Le coordinate geografiche agiscono come proxy statici della struttura territoriale. La correlazione negativa della latitudine con NO₂, PM10 e PM2.5 indica che le aree più settentrionali e alpine del dominio tendono ad avere concentrazioni inferiori rispetto alle zone più meridionali e pianeggianti, dove la densità emissiva e le condizioni di ristagno sono maggiori. La latitudine positiva, seppure debole, con O₃ è coerente con concentrazioni relativamente più alte in aree meno soggette a titolazione da NO.
 
-### Interpretazione degli andamenti temporali nei punti rappresentativi
+###### Interpretazione degli andamenti temporali nei punti rappresentativi
 
 Gli andamenti temporali dei quattro inquinanti sono stati analizzati su due punti rappresentativi: un punto alpino/rurale localizzato in Alta Valtellina, punto 15, e un punto urbano localizzato a Milano centro, punto 736. Il periodo considerato va dal 1 febbraio al 30 aprile 2025. Per ogni inquinante sono riportate la serie CAMS, la serie S5P corrispondente o il relativo proxy, e le medie mobili del segnale satellitare a 3, 7 e 14 giorni.
 
 Questi grafici hanno una funzione complementare rispetto alle matrici di correlazione. Le matrici sintetizzano il comportamento medio del dominio, mentre gli andamenti temporali permettono di verificare come la relazione CAMS-S5P cambi localmente in funzione del contesto emissivo e geografico. Il confronto tra Milano e Alta Valtellina evidenzia infatti che la qualità dell'associazione non è uniforme nello spazio.
 
-![Figura 9 - Andamento temporale Alta Valtellina](risultati_correlazione/andamento_alpina_alta_valtellina.png)
+<img src="image/risultati_correlazione/andamento_alpina_alta_valtellina.png" alt="Figura 9 - Andamento temporale Alta Valtellina" width="550">
 
 *Figura 9. andamento temporale dei quattro inquinanti nel punto alpino/rurale dell'Alta Valtellina.*
 
@@ -219,7 +205,7 @@ Nel punto alpino/rurale, i coefficienti giornalieri sono deboli per tutti gli in
 
 Questo comportamento indica che, in un contesto alpino a basse concentrazioni e con forte influenza orografica, la relazione tra colonna satellitare e concentrazione superficiale può essere debole o instabile. Le concentrazioni CAMS mostrano episodi locali e variazioni rapide, mentre i proxy S5P, soprattutto dopo media mobile, descrivono un segnale più smussato e integrato verticalmente. La discrepanza può essere dovuta alla complessità del profilo verticale in area montana, alla rappresentatività spaziale del pixel satellitare, alla copertura nuvolosa e alla maggiore distanza dalle sorgenti primarie. Nel caso del particolato, l'uso dello stesso Aerosol Index per PM10 e PM2.5 conferma che il segnale satellitare è comune alle due frazioni; eventuali differenze di correlazione dipendono dalla risposta locale delle due serie CAMS, non da due osservazioni S5P distinte.
 
-![Figura 10 - Andamento temporale Milano centro](risultati_correlazione/andamento_milano_centro.png)
+<img src="image/risultati_correlazione/andamento_milano_centro.png" alt="Figura 10 - Andamento temporale Milano centro" width="550">
 
 *Figura 10. andamento temporale dei quattro inquinanti nel punto urbano di Milano centro.*
 
@@ -240,13 +226,13 @@ Il confronto tra i due punti mostra quindi un risultato chiave: l'accordo CAMS-S
 
 La figura relativa al punto 15 con tutti gli inquinanti rappresenta lo stesso caso alpino dell'Alta Valtellina e va letta come approfondimento locale del comportamento rurale. Le ulteriori serie rappresentative, relative a Milano centro, hinterland nord, area rurale della Pianura Padana e Alta Valtellina, consentono di confrontare qualitativamente regimi territoriali differenti. In generale, le aree urbane e periurbane mostrano segnali più strutturati per NO₂ e particolato, mentre le aree rurali e alpine presentano relazioni più deboli e maggiore sensibilità alle condizioni meteorologiche e al trasporto regionale.
 
-## Implicazioni per la selezione delle feature
+###### Implicazioni per la selezione delle feature
 
 L'analisi suggerisce che le variabili più informative per NO₂ sono S5P NO₂, l'Aerosol Index comune e le coordinate spaziali, con particolare attenzione alla latitudine. Per O₃, il proxy NO₂ risulta il predittore più rilevante in senso negativo, seguito da HCHO come indicatore di attività fotochimica. Per PM10 e PM2.5, i risultati indicano l'utilità di S5P NO₂ e dello stesso Aerosol Index S5P, tenendo presente che l'AI è un unico proxy comune del carico aerosolico e non una misura distinta delle due frazioni granulometriche, oltre alla forte informazione contenuta nei gradienti spaziali.
 
 La selezione delle feature per i modelli successivi dovrebbe tuttavia considerare la ridondanza tra variabili. PM10 e PM2.5 sono quasi perfettamente correlati, e NO₂ è fortemente associato al particolato. L'inclusione simultanea di predittori molto correlati può migliorare apparentemente l'adattamento, ma rendere instabili i coefficienti nei modelli lineari e complicare l'interpretazione fisica. Per modelli sensibili alla multicollinearità, sarà quindi opportuno valutare tecniche di selezione, regolarizzazione o riduzione dimensionale.
 
-## Limiti dell'analisi di correlazione
+###### Limiti dell'analisi di correlazione
 
 L'analisi di correlazione presenta diversi limiti metodologici che devono essere esplicitati.
 
@@ -260,7 +246,7 @@ Un ulteriore limite riguarda la differenza fisica tra grandezze confrontate. Le 
 
 Infine, variabili fortemente correlate tra loro possono introdurre multicollinearità nei modelli di regressione. Questo aspetto è particolarmente rilevante per PM10 e PM2.5, ma anche per NO₂ e particolato. La fase di modellazione dovrà quindi distinguere tra variabili realmente complementari e variabili che descrivono lo stesso gradiente spaziale o temporale.
 
-## Sintesi critica
+###### Sintesi critica
 
 L'analisi di correlazione ha permesso di identificare un insieme di relazioni statistiche coerenti con i processi atmosferici noti. NO₂ si conferma fortemente associato agli indicatori emissivi e al particolato, e mostra una marcata anti-correlazione con O₃. L'ozono risulta governato da una dinamica opposta rispetto agli inquinanti primari, con una forte relazione negativa con il proxy NO₂ e una relazione positiva più evidente con HCHO su scale temporali aggregate. PM10 e PM2.5 mostrano una struttura comune, fortemente correlata con NO₂ e moderatamente associata allo stesso proxy satellitare dell'aerosol, cioè l'Aerosol Index; pertanto, le differenze tra PM10 e PM2.5 vanno attribuite alle diverse serie CAMS e non a misure S5P separate.
 
@@ -268,7 +254,7 @@ L'uso di lag e medie mobili ha evidenziato che le relazioni più robuste emergon
 
 Nel complesso, le evidenze ottenute supportano la successiva selezione delle feature per modelli di regressione e machine learning. S5P NO₂ risulta una feature chiave per NO₂, O₃ e particolato; l'Aerosol Index contribuisce alla descrizione del carico aerosolico e dei gradienti emissivi come proxy comune per PM10 e PM2.5; HCHO fornisce informazione utile per i processi fotochimici; le coordinate geografiche rappresentano proxy statici importanti dei gradienti territoriali. La fase modellistica dovrà però integrare tali risultati con controlli di multicollinearità, validazione spaziale e temporale, ed eventuale inclusione di variabili meteorologiche aggiuntive capaci di rappresentare stabilità atmosferica, temperatura, umidità, precipitazione e altezza dello strato limite.
 
-## Valori operativi per la modellistica
+###### Valori operativi per la modellistica
 
 A conclusione dell'analisi esplorativa, i risultati delle matrici lag-media mobile permettono di definire un primo insieme di configurazioni operative da utilizzare nella successiva modellistica degli inquinanti in funzione dei proxy più significativi. La scelta privilegia la scala giornaliera, poiché consente di mantenere una risoluzione temporale coerente con l'evoluzione degli episodi di inquinamento, applicando tuttavia una media mobile di 14 giorni per ridurre il rumore giornaliero e rendere più stabile il segnale satellitare. Il lag riportato in tabella deve essere interpretato secondo la stessa convenzione temporale utilizzata nelle matrici di correlazione: lag nullo indica una relazione sincrona, mentre valori positivi indicano uno spostamento temporale tra la serie dell'inquinante e quella del proxy.
 
@@ -301,231 +287,219 @@ Alla scala settimanale, le stesse relazioni diventano più robuste grazie all'ul
 | PM2.5 | Proxy NO₂ S5P | 4 settimane | 0 settimane | $r = 0,596$ |
 
 In sintesi, la modellistica successiva dovrebbe assumere come base operativa le combinazioni giornaliere con media mobile a 14 giorni e i lag specifici riportati sopra, mantenendo le configurazioni settimanali come verifica della stabilità del segnale. L'Aerosol Index deve essere trattato come un unico proxy S5P comune del carico aerosolico per PM10 e PM2.5; pertanto, eventuali differenze nella risposta dei due modelli non dovranno essere attribuite a misure satellitari distinte, ma alla diversa natura delle serie CAMS e alla differente sensibilità delle due frazioni granulometriche ai processi di accumulo, trasporto e rimozione atmosferica.
+##### 6.1.2 Regressione lineare multipla
+##### 6.1.3 Validazione e mappatura degli scarti
+### 6.2 Approccio Basato sulle Stazioni a Terra (ARPA)
+  - Modellazione della conversione dati satellitari → particolato al suolo.
+  - Tecniche di stacking e gestione della variabilità spazio-temporale.
+### 6.3 Modello Predittivo Orario (Integrazione Sentinel-4)
+  - Correlazione oraria dati satellitari vs dati ground.
+  - Sostituzione dinamica dei dati S5 con medie e dati orari S4.
 
-## Appendice: spazi per le figure
+## 7. Risultati Previsti e Innovazione
 
-### Figure generali e riepiloghi
+- Mappe giornaliere e orarie ad alta risoluzione (500m x 500m).
+- Analisi delle performance e benchmark con i sistemi attuali.
 
-![Figura A1 - Panoramica dati](risultati_correlazione/panoramica_dati.png)
+## 8. Applicazioni Operative e Supporto Decisionale
+
+- Sistemi di early warning e supporto al policy making.
+- Studi epidemiologici e ottimizzazione delle reti di monitoraggio urbane.
+
+## 9. Conclusioni e Prospettive Future
+
+## 10. Bibliografia e Sitografia
+
+## 11. Appendice
+### 11.1 Risultati dell'analisi di correlazione basata su dati CAMS
+#### Figure generali e riepiloghi
+<img src="image/risultati_correlazione/panoramica_dati.png" alt="Figura A1 - Panoramica dati" width="450">
 
 *Figura A1. Panoramica della copertura dei dati e delle caratteristiche del vento.*
 
-![Figura A2 - Matrice generale giornaliera](risultati_correlazione/matrice_correlazione_variabili_giornaliero.png)
+<img src="image/risultati_correlazione/matrice_correlazione_variabili_giornaliero.png" alt="Figura A2 - Matrice generale giornaliera" width="450">
 
 *Figura A2. Matrice generale di correlazione tra variabili giornaliere.*
 
-![Figura A3 - Tabella riepilogo giornaliero](risultati_correlazione/tabella_riepilogo_giornaliero.png)
+<img src="image/risultati_correlazione/tabella_riepilogo_giornaliero.png" alt="Figura A3 - Tabella riepilogo giornaliero" width="450">
 
 *Figura A3. Riepilogo dei proxy ottimali alla scala giornaliera.*
 
-![Figura A4 - Tabella best fit giornaliero](risultati_correlazione/tabella_bestfit_giornaliero.png)
+<img src="image/risultati_correlazione/tabella_bestfit_giornaliero.png" alt="Figura A4 - Tabella best fit giornaliero" width="450">
 
 *Figura A4. Parametri dei fit lineari e polinomiali sulle combinazioni ottimali.*
 
-![Figura A5 - Dispersione e best fit giornaliero](risultati_correlazione/dispersione_bestfit_giornaliero.png)
+<img src="image/risultati_correlazione/dispersione_bestfit_giornaliero.png" alt="Figura A5 - Dispersione e best fit giornaliero" width="450">
 
 *Figura A5. Diagrammi di dispersione e best fitting per le coppie ottimali.*
 
-![Figura A6 - Confronto giornaliero settimanale](risultati_correlazione/confronto_giornaliero_settimanale.png)
+<img src="image/risultati_correlazione/confronto_giornaliero_settimanale.png" alt="Figura A6 - Confronto giornaliero settimanale" width="450">
 
 *Figura A6. Confronto tra coefficienti ottimali giornalieri e settimanali.*
 
-![Figura A7 - Confronto NO2 giornaliero settimanale](risultati_correlazione/proxy_confronto_NO2_giornaliero_settimanale.png)
+<img src="image/risultati_correlazione/proxy_confronto_NO2_giornaliero_settimanale.png" alt="Figura A7 - Confronto NO2 giornaliero settimanale" width="450">
 
 *Figura A7. Confronto specifico dei proxy NO₂ tra scala giornaliera e settimanale.*
 
-### Matrici giornaliere per NO₂
+##### Matrici giornaliere per NO₂
 
-![Figura A8 - NO2 vs NO2 TROPOMI giornaliero](risultati_correlazione/matrice_giornaliero_NO2_NO2_TROPOMI.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_NO2_NO2_TROPOMI.png" alt="Figura A8 - NO2 vs NO2 TROPOMI giornaliero" width="450">
 
 *Figura A8. Matrice lag-media mobile per NO₂ e NO₂ TROPOMI.*
 
-![Figura A9 - NO2 vs Colonna O3 giornaliero](risultati_correlazione/matrice_giornaliero_NO2_Colonna_O3.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_NO2_Colonna_O3.png" alt="Figura A9 - NO2 vs Colonna O3 giornaliero" width="450">
 
 *Figura A9. Matrice lag-media mobile per NO₂ e colonna O₃.*
 
-![Figura A10 - NO2 vs Aerosol Index giornaliero](risultati_correlazione/matrice_giornaliero_NO2_Aerosol_Index.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_NO2_Aerosol_Index.png" alt="Figura A10 - NO2 vs Aerosol Index giornaliero" width="450">
 
 *Figura A10. Matrice lag-media mobile per NO₂ e Aerosol Index.*
 
-![Figura A11 - NO2 vs SO2 proxy giornaliero](risultati_correlazione/matrice_giornaliero_NO2_SO2_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_NO2_SO2_proxy.png" alt="Figura A11 - NO2 vs SO2 proxy giornaliero" width="450">
 
 *Figura A11. Matrice lag-media mobile per NO₂ e SO₂ proxy.*
 
-![Figura A12 - NO2 vs HCHO proxy giornaliero](risultati_correlazione/matrice_giornaliero_NO2_HCHO_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_NO2_HCHO_proxy.png" alt="Figura A12 - NO2 vs HCHO proxy giornaliero" width="450">
 
 *Figura A12. Matrice lag-media mobile per NO₂ e HCHO proxy.*
 
-### Matrici giornaliere per O₃
+##### Matrici giornaliere per O₃
 
-![Figura A13 - O3 vs Colonna O3 giornaliero](risultati_correlazione/matrice_giornaliero_O3_Colonna_O3.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_O3_Colonna_O3.png" alt="Figura A13 - O3 vs Colonna O3 giornaliero" width="450">
 
 *Figura A13. Matrice lag-media mobile per O₃ e colonna O₃.*
 
-![Figura A14 - O3 vs NO2 proxy giornaliero](risultati_correlazione/matrice_giornaliero_O3_NO2_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_O3_NO2_proxy.png" alt="Figura A14 - O3 vs NO2 proxy giornaliero" width="450">
 
 *Figura A14. Matrice lag-media mobile per O₃ e proxy NO₂.*
 
-![Figura A15 - O3 vs HCHO proxy giornaliero](risultati_correlazione/matrice_giornaliero_O3_HCHO_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_O3_HCHO_proxy.png" alt="Figura A15 - O3 vs HCHO proxy giornaliero" width="450">
 
 *Figura A15. Matrice lag-media mobile per O₃ e HCHO proxy.*
 
-### Matrici giornaliere per PM10
+##### Matrici giornaliere per PM10
 
-![Figura A16 - PM10 vs Aerosol Index giornaliero](risultati_correlazione/matrice_giornaliero_PM10_Aerosol_Index.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_PM10_Aerosol_Index.png" alt="Figura A16 - PM10 vs Aerosol Index giornaliero" width="450">
 
 *Figura A16. Matrice lag-media mobile per PM10 e Aerosol Index S5P comune.*
 
-![Figura A17 - PM10 vs NO2 proxy giornaliero](risultati_correlazione/matrice_giornaliero_PM10_NO2_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_PM10_NO2_proxy.png" alt="Figura A17 - PM10 vs NO2 proxy giornaliero" width="450">
 
 *Figura A17. Matrice lag-media mobile per PM10 e proxy NO₂.*
 
-![Figura A18 - PM10 vs SO2 proxy giornaliero](risultati_correlazione/matrice_giornaliero_PM10_SO2_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_PM10_SO2_proxy.png" alt="Figura A18 - PM10 vs SO2 proxy giornaliero" width="450">
 
 *Figura A18. Matrice lag-media mobile per PM10 e SO₂ proxy.*
 
-![Figura A19 - PM10 vs HCHO proxy giornaliero](risultati_correlazione/matrice_giornaliero_PM10_HCHO_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_PM10_HCHO_proxy.png" alt="Figura A19 - PM10 vs HCHO proxy giornaliero" width="450">
 
 *Figura A19. Matrice lag-media mobile per PM10 e HCHO proxy.*
 
-### Matrici giornaliere per PM2.5
+##### Matrici giornaliere per PM2.5
 
-![Figura A20 - PM2.5 vs Aerosol Index giornaliero](risultati_correlazione/matrice_giornaliero_PM25_Aerosol_Index.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_PM25_Aerosol_Index.png" alt="Figura A20 - PM2.5 vs Aerosol Index giornaliero" width="450">
 
 *Figura A20. Matrice lag-media mobile per PM2.5 e lo stesso Aerosol Index S5P comune usato per PM10.*
 
-![Figura A21 - PM2.5 vs NO2 proxy giornaliero](risultati_correlazione/matrice_giornaliero_PM25_NO2_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_PM25_NO2_proxy.png" alt="Figura A21 - PM2.5 vs NO2 proxy giornaliero" width="450">
 
 *Figura A21. Matrice lag-media mobile per PM2.5 e proxy NO₂.*
 
-![Figura A22 - PM2.5 vs SO2 proxy giornaliero](risultati_correlazione/matrice_giornaliero_PM25_SO2_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_PM25_SO2_proxy.png" alt="Figura A22 - PM2.5 vs SO2 proxy giornaliero" width="450">
 
 *Figura A22. Matrice lag-media mobile per PM2.5 e SO₂ proxy.*
 
-![Figura A23 - PM2.5 vs HCHO proxy giornaliero](risultati_correlazione/matrice_giornaliero_PM25_HCHO_proxy.png)
+<img src="image/risultati_correlazione/matrice_giornaliero_PM25_HCHO_proxy.png" alt="Figura A23 - PM2.5 vs HCHO proxy giornaliero" width="450">
 
 *Figura A23. Matrice lag-media mobile per PM2.5 e HCHO proxy.*
 
-### Matrici settimanali
 
-![Figura A24 - NO2 vs NO2 TROPOMI settimanale](risultati_correlazione/matrice_settimanale_NO2_NO2_TROPOMI.png)
+##### Confronti tra proxy e settori di vento
 
-*Figura A24. Matrice settimanale per NO₂ e NO₂ TROPOMI.*
+<img src="image/risultati_correlazione/proxy_confronto_giornaliero_NO2.png" alt="Figura A32 - Proxy confronto NO2 giornaliero" width="450">
 
-![Figura A25 - NO2 vs Colonna O3 settimanale](risultati_correlazione/matrice_settimanale_NO2_Colonna_O3.png)
+*Figura A24. Confronto dei proxy giornalieri per NO₂.*
 
-*Figura A25. Matrice settimanale per NO₂ e colonna O₃.*
+<img src="image/risultati_correlazione/proxy_confronto_giornaliero_O3.png" alt="Figura A33 - Proxy confronto O3 giornaliero" width="450">
 
-![Figura A26 - NO2 vs Aerosol Index settimanale](risultati_correlazione/matrice_settimanale_NO2_Aerosol_Index.png)
+*Figura A25. Confronto dei proxy giornalieri per O₃.*
 
-*Figura A26. Matrice settimanale per NO₂ e Aerosol Index.*
+<img src="image/risultati_correlazione/proxy_confronto_giornaliero_PM10.png" alt="Figura A34 - Proxy confronto PM10 giornaliero" width="450">
 
-![Figura A27 - NO2 vs SO2 proxy settimanale](risultati_correlazione/matrice_settimanale_NO2_SO2_proxy.png)
+*Figura A26. Confronto dei proxy giornalieri per PM10; l'Aerosol Index è il proxy S5P comune del carico aerosolico.*
 
-*Figura A27. Matrice settimanale per NO₂ e SO₂ proxy.*
+<img src="image/risultati_correlazione/proxy_confronto_giornaliero_PM25.png" alt="Figura A35 - Proxy confronto PM2.5 giornaliero" width="450">
 
-![Figura A28 - NO2 vs HCHO proxy settimanale](risultati_correlazione/matrice_settimanale_NO2_HCHO_proxy.png)
+*Figura A27. Confronto dei proxy giornalieri per PM2.5; l'Aerosol Index è lo stesso proxy S5P comune usato per PM10.*
 
-*Figura A28. Matrice settimanale per NO₂ e HCHO proxy.*
-
-![Figura A29 - O3 vs NO2 proxy settimanale](risultati_correlazione/matrice_settimanale_O3_NO2_proxy.png)
-
-*Figura A29. Matrice settimanale per O₃ e proxy NO₂.*
-
-![Figura A30 - PM10 vs NO2 proxy settimanale](risultati_correlazione/matrice_settimanale_PM10_NO2_proxy.png)
-
-*Figura A30. Matrice settimanale per PM10 e proxy NO₂.*
-
-![Figura A31 - PM2.5 vs NO2 proxy settimanale](risultati_correlazione/matrice_settimanale_PM25_NO2_proxy.png)
-
-*Figura A31. Matrice settimanale per PM2.5 e proxy NO₂.*
-
-### Confronti tra proxy e settori di vento
-
-![Figura A32 - Proxy confronto NO2 giornaliero](risultati_correlazione/proxy_confronto_giornaliero_NO2.png)
-
-*Figura A32. Confronto dei proxy giornalieri per NO₂.*
-
-![Figura A33 - Proxy confronto O3 giornaliero](risultati_correlazione/proxy_confronto_giornaliero_O3.png)
-
-*Figura A33. Confronto dei proxy giornalieri per O₃.*
-
-![Figura A34 - Proxy confronto PM10 giornaliero](risultati_correlazione/proxy_confronto_giornaliero_PM10.png)
-
-*Figura A34. Confronto dei proxy giornalieri per PM10; l'Aerosol Index è il proxy S5P comune del carico aerosolico.*
-
-![Figura A35 - Proxy confronto PM2.5 giornaliero](risultati_correlazione/proxy_confronto_giornaliero_PM25.png)
-
-*Figura A35. Confronto dei proxy giornalieri per PM2.5; l'Aerosol Index è lo stesso proxy S5P comune usato per PM10.*
-
-![Figura A36 - Proxy confronto NO2 settimanale](risultati_correlazione/proxy_confronto_settimanale_NO2.png)
+<img src="image/risultati_correlazione/proxy_confronto_settimanale_NO2.png" alt="Figura A36 - Proxy confronto NO2 settimanale" width="450">
 
 *Figura A36. Confronto dei proxy settimanali per NO₂.*
 
-![Figura A37 - Settori vento NO2](risultati_correlazione/settori_giornaliero_NO2.png)
+<img src="image/risultati_correlazione/settori_giornaliero_NO2.png" alt="Figura A37 - Settori vento NO2" width="450">
 
-*Figura A37. Correlazione NO₂ per settore di provenienza del vento.*
+*Figura A28. Correlazione NO₂ per settore di provenienza del vento.*
 
-![Figura A38 - Settori vento O3](risultati_correlazione/settori_giornaliero_O3.png)
+<img src="image/risultati_correlazione/settori_giornaliero_O3.png" alt="Figura A38 - Settori vento O3" width="450">
 
-*Figura A38. Correlazione O₃ per settore di provenienza del vento.*
+*Figura A29. Correlazione O₃ per settore di provenienza del vento.
 
-![Figura A39 - Settori vento PM10](risultati_correlazione/settori_giornaliero_PM10.png)
+<img src="image/risultati_correlazione/settori_giornaliero_PM10.png" alt="Figura A39 - Settori vento PM10" width="450">
 
-*Figura A39. Correlazione PM10 per settore di provenienza del vento.*
+*Figura A30. Correlazione PM10 per settore di provenienza del vento.*
 
-![Figura A40 - Settori vento PM2.5](risultati_correlazione/settori_giornaliero_PM25.png)
+<img src="image/risultati_correlazione/settori_giornaliero_PM25.png" alt="Figura A40 - Settori vento PM2.5" width="450">
 
-*Figura A40. Correlazione PM2.5 per settore di provenienza del vento.*
+*Figura A31. Correlazione PM2.5 per settore di provenienza del vento.*
 
-### Analisi del vento pre-13
+##### Analisi del vento pre-13
 
-![Figura A41 - Distribuzioni vento pre-13](risultati_correlazione/vento_pre13_distribuzioni.png)
+<img src="image/risultati_correlazione/vento_pre13_distribuzioni.png" alt="Figura A41 - Distribuzioni vento pre-13" width="450">
 
-*Figura A41. Distribuzione delle metriche di vento giornaliero e pre-13.*
+*Figura A32. Distribuzione delle metriche di vento giornaliero e pre-13.*
 
-![Figura A42 - Scatter vento e indici S5P](risultati_correlazione/vento_pre13_scatter_s5p.png)
+<img src="image/risultati_correlazione/vento_pre13_scatter_s5p.png" alt="Figura A42 - Scatter vento e indici S5P" width="450">
 
-*Figura A42. Diagrammi di dispersione tra vento e indici S5P.*
+*Figura A33. Diagrammi di dispersione tra vento e indici S5P.*
 
-![Figura A43 - Correlazioni vento e indici S5P](risultati_correlazione/vento_pre13_correlazioni_s5p.png)
+<img src="image/risultati_correlazione/vento_pre13_correlazioni_s5p.png" alt="Figura A43 - Correlazioni vento e indici S5P" width="450">
 
-*Figura A43. Confronto dei coefficienti vento-indici S5P per diverse finestre temporali.*
+*Figura A34. Confronto dei coefficienti vento-indici S5P per diverse finestre temporali.*
 
-![Figura A44 - Confronto vento pre-13](risultati_correlazione/vento_pre13_confronto.png)
+<img src="image/risultati_correlazione/vento_pre13_confronto.png" alt="Figura A44 - Confronto vento pre-13" width="450">
 
-*Figura A44. Confronto tra metriche di vento.*
+*Figura A35. Confronto tra metriche di vento.*
 
-![Figura A45 - Soglia vento pre-13](risultati_correlazione/vento_pre13_soglia.png)
+<img src="image/risultati_correlazione/vento_pre13_soglia.png" alt="Figura A45 - Soglia vento pre-13" width="450">
 
-*Figura A45. Impatto della soglia di vento sulle diverse definizioni di ventilazione.*
+*Figura A36. Impatto della soglia di vento sulle diverse definizioni di ventilazione.*
 
-### Serie temporali e casi rappresentativi
+##### Serie temporali e casi rappresentativi
 
-![Figura A46 - Andamento punto 15 tutti inquinanti](risultati_correlazione/andamento_punto_15_tutti_inquinanti.png)
+<img src="image/risultati_correlazione/andamento_punto_15_tutti_inquinanti.png" alt="Figura A46 - Andamento punto 15 tutti inquinanti" width="450">
 
-*Figura A46. Andamento temporale dei quattro inquinanti per il punto rappresentativo 15.*
+*Figura A37. Andamento temporale dei quattro inquinanti per il punto rappresentativo 15.*
 
-![Figura A47 - Andamento alpina Alta Valtellina](risultati_correlazione/andamento_alpina_alta_valtellina.png)
+<img src="image/risultati_correlazione/andamento_alpina_alta_valtellina.png" alt="Figura A47 - Andamento alpina Alta Valtellina" width="450">
 
-*Figura A47. Andamento temporale per l'area alpina dell'Alta Valtellina.*
+*Figura A38. Andamento temporale per l'area alpina dell'Alta Valtellina.*
 
-![Figura A48 - Andamento Milano centro](risultati_correlazione/andamento_milano_centro.png)
+<img src="image/risultati_correlazione/andamento_milano_centro.png" alt="Figura A48 - Andamento Milano centro" width="450">
 
-*Figura A48. Andamento temporale per Milano centro.*
+*Figura A39. Andamento temporale per Milano centro.*
 
-![Figura A49 - Serie alpina Alta Valtellina](risultati_correlazione/serie_alpina_alta_valtellina.png)
+<img src="image/risultati_correlazione/serie_alpina_alta_valtellina.png" alt="Figura A49 - Serie alpina Alta Valtellina" width="450">
 
-*Figura A49. Serie temporale sintetica per l'area alpina dell'Alta Valtellina.*
+*Figura A40. Serie temporale sintetica per l'area alpina dell'Alta Valtellina.*
 
-![Figura A50 - Serie Milano centro](risultati_correlazione/serie_milano_centro.png)
+<img src="image/risultati_correlazione/serie_milano_centro.png" alt="Figura A50 - Serie Milano centro" width="450">
 
-*Figura A50. Serie temporale sintetica per Milano centro.*
+*Figura A41. Serie temporale sintetica per Milano centro.*
 
-![Figura A51 - Serie Milano hinterland nord](risultati_correlazione/serie_milano_hinterland_nord.png)
+<img src="image/risultati_correlazione/serie_milano_hinterland_nord.png" alt="Figura A51 - Serie Milano hinterland nord" width="450">
 
-*Figura A51. Serie temporale sintetica per Milano hinterland nord.*
+*Figura A42. Serie temporale sintetica per Milano hinterland nord.*
 
-![Figura A52 - Serie rurale Pianura Padana](risultati_correlazione/serie_rurale_pianura_padana.png)
+<img src="image/risultati_correlazione/serie_rurale_pianura_padana.png" alt="Figura A52 - Serie rurale Pianura Padana" width="450">
 
-*Figura A52. Serie temporale sintetica per area rurale della Pianura Padana.*
+*Figura A43. Serie temporale sintetica per area rurale della Pianura Padana.*
